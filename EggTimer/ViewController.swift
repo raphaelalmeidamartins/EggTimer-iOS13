@@ -12,15 +12,17 @@ class ViewController: UIViewController {
     var timer = Timer()
 
     let cookingTimes = [
-        "Soft": 5,
-        "Medium": 7,
-        "Hard": 12
+        "Soft": 1,
+        "Medium": 2,
+        "Hard": 3
     ]
     
     var elapsedTime: Int = 0
 
     @IBOutlet weak var titleLabel: UILabel!
 
+    @IBOutlet weak var progressView: UIProgressView!
+    
     @IBAction func hardnessSelected(_ sender: UIButton) {
         let time = cookingTimes[sender.currentTitle!]
         
@@ -37,7 +39,7 @@ class ViewController: UIViewController {
             self.elapsedTime += Int(timer.timeInterval)
             
             if self.elapsedTime <= timeInSeconds {
-                self.titleLabel.text = "Cooking: \(timeInSeconds - self.elapsedTime) seconds remaining"
+                self.progressView.progress = Float(self.elapsedTime) / Float(timeInSeconds)
             } else {
                 self.elapsedTime = 0
                 self.titleLabel.text = "Your egg is ready"
