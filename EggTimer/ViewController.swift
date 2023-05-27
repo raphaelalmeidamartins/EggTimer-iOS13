@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     var timer = Timer()
+    
+    var audioPlayer: AVAudioPlayer?
 
     let cookingTimes = [
         "Soft": 1,
@@ -26,7 +29,10 @@ class ViewController: UIViewController {
     @IBAction func hardnessSelected(_ sender: UIButton) {
         let time = cookingTimes[sender.currentTitle!]
         
-        if time != nil { self.startTimer(time: time!) }
+        if time != nil {
+            self.startTimer(time: time!)
+            self.titleLabel.text = "Cooking \(sender.currentTitle!) egg..."
+        }
         else { print("Error") }
     }
     
@@ -44,7 +50,23 @@ class ViewController: UIViewController {
                 self.elapsedTime = 0
                 self.titleLabel.text = "Your egg is ready"
                 self.timer.invalidate()
+                self.playAlarmSound()
             }
         }
+    }
+    
+    func playAlarmSound() {
+        guard let alarmSoundURL = Bundle.main.url(forResource: "alarm_sound", withExtension: "mp3") else {
+            print("Alarm sound file not found")
+            return
+        }
+        
+        do {
+            self.audioPlayer = try AVAudioPlayer(contentsOf: alarmSoundURL)
+            self.audioPlayer?.play()
+        } catch {
+            print("Error while playing the alarm audio")
+        }
+        
     }
 }
