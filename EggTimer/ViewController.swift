@@ -9,13 +9,17 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var timer = Timer()
+
     let cookingTimes = [
         "Soft": 5,
         "Medium": 7,
         "Hard": 12
     ]
     
-    var elapsedTime: Double = 0.0
+    var elapsedTime: Int = 0
+
+    @IBOutlet weak var titleLabel: UILabel!
 
     @IBAction func hardnessSelected(_ sender: UIButton) {
         let time = cookingTimes[sender.currentTitle!]
@@ -25,17 +29,19 @@ class ViewController: UIViewController {
     }
     
     func startTimer(time: Int) {
-        let timeInSeconds: Double = Double(time) * 60.0
+        self.timer.invalidate()
+
+        let timeInSeconds = time * 60
     
-        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            self.elapsedTime += timer.timeInterval
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            self.elapsedTime += Int(timer.timeInterval)
             
             if self.elapsedTime <= timeInSeconds {
-                print("Cooking: \(timeInSeconds - self.elapsedTime) seconds remaining")
+                self.titleLabel.text = "Cooking: \(timeInSeconds - self.elapsedTime) seconds remaining"
             } else {
-                self.elapsedTime = 0.0
-                print("Egg is ready!")
-                timer.invalidate()
+                self.elapsedTime = 0
+                self.titleLabel.text = "Your egg is ready"
+                self.timer.invalidate()
             }
         }
     }
